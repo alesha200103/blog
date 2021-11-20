@@ -3,6 +3,70 @@
 `python manage.py runserver`
 ____
 ## API
+### Регистрация и авторизация
+`POST /auth/users/` - регистрация пользователя.
+```
+{
+    "username": string,
+    "email": string,
+    "password": string,
+    "re_password": string
+}
+```
+
+Возвращает:
+```
+HTTP 201 Created
+{
+    "email": string,
+    "username": string,
+    "id": integer
+}
+```
+Посылает письмо для активации на почту.
+
+В письме отправляется ссылка вида: `http://127.0.0.1:8000/#/activate/<str:uid>/<str:token>`
+___
+`POST /auth/users/activation/` - активирует зарегистрированного пользователя.
+Без активации на возможно войти.
+
+```
+{
+    "uid": string,
+    "token": string
+}
+```
+Возвращает:
+```
+HTTP 204 No Content
+```
+___
+`POST /auth/token/login/` - возвращает `auth_token`.
+```
+{
+    "username": string,
+    "password": string
+}
+```
+Возвращает:
+
+```
+HTTP 200 OK
+{
+    "auth_token": string
+}
+```
+Данный токен надо прописывать в `Headers`
+
+`Authorization : Token <str:token>`
+___
+`POST /auth/token/logout/` - уничтожает `token`.
+
+Данный токен надо прописывать в `Headers`
+
+`Authorization : Token <str:token>`
+___
+### Articles
 `GET /api/articles/` - возвращает список всех статей.
 
 Возвращает:

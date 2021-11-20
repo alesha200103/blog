@@ -4,9 +4,11 @@ from rest_framework.views import APIView
 from article.models import Article
 from article.serializers import ArticleSerializer
 from rest_framework.generics import get_object_or_404
+from rest_framework import permissions, generics
 
 
-class ArticleView(APIView):
+class ArticleView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, pk=None):
         """
