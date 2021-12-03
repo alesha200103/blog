@@ -5,10 +5,14 @@ from article.models import Article
 from article.serializers import ArticleSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions, generics
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+
 
 
 class ArticleView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    DEBUG = True
+    permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, pk=None):
         """
@@ -18,7 +22,16 @@ class ArticleView(generics.ListAPIView):
         :return: Response({"articles": serializer.data})
         """
         if pk is None:
-            articles = Article.objects.all()
+            limit = int(request.GET.get("limit", 0))
+            offset = int(request.GET.get("offset", 0))
+            sort = request.GET.get("sort", "asc")
+            author_id = request.GET.get("author_id", 0)
+            in_text = request.GET.get("in_text", None)
+            articles = Article.objects.order_by("created_at" if sort == "asc" else "-created_at")
+            if author_id != 0:
+                articles = articles.filter(author=author_id)
+            if limit != 0:
+                articles = articles[offset:offset+limit]
             serializer = ArticleSerializer(articles, many=True)
             return Response({"articles": serializer.data})
         else:

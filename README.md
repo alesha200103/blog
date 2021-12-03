@@ -25,7 +25,7 @@ HTTP 201 Created
 ```
 Посылает письмо для активации на почту.
 
-В письме отправляется ссылка вида: `http://127.0.0.1:8000/#/activate/<str:uid>/<str:token>`
+В письме отправляется ссылка вида: `http://127.0.0.1:8000/activate/?uid=<str:uid>&token=<str:token>`
 ___
 `POST /auth/users/activation/` - активирует зарегистрированного пользователя.
 Без активации на возможно войти.
@@ -67,7 +67,8 @@ ___
 `Authorization : Token <str:token>`
 ___
 ### Articles
-`GET /api/articles/` - возвращает список всех статей.
+`GET /api/articles?limit=<int:limit>&offset=<int:offset>&sort=<str:sort>&author_id=<int:author_id>` - возвращает список всех статей.
+Все параметры передаваемые в url необязательны.
 
 Возвращает:
 ```

@@ -8,6 +8,8 @@ class ArticleSerializer(serializers.Serializer):
     description = serializers.CharField()
     body = serializers.CharField()
     author_id = serializers.IntegerField()
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     def create(self, validated_data):
         return Article.objects.create(**validated_data)

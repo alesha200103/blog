@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from fluffy_broccoli_blog.views import redirect_activation
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -57,4 +58,5 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/', include('article.urls')),
+    path('activate/', redirect_activation),
 ]
