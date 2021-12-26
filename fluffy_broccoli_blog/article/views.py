@@ -136,5 +136,5 @@ class CommentView(generics.ListAPIView):
         if serializer.is_valid(raise_exception=True):
             comment_saved = serializer.save()
         else:
-            return Response({"unsuccessful": "Wrong data."})
+            return Response({"detail": "Неверные данные."})
         return Response({"success": "Comment for article {} created successfully".format(comment_saved.article_id)})

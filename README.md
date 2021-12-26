@@ -246,6 +246,6 @@ HTTP 200 OK
 ```
 HTTP 400 Bad Request
 {
-    "unsuccessful": "Wrong data."
+    "detail": "Неверные данные."
 }
 ```
