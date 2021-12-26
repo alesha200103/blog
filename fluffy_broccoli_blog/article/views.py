@@ -115,7 +115,7 @@ class CommentView(generics.ListAPIView):
         :param request:
         :return: Response({"articles": serializer.data})
         """
-        comments = Comment.objects.filter(author=article_id).order_by("-created_at")
+        comments = Comment.objects.filter(article=article_id).order_by("-created_at")
         if len(comments) == 0:
             return Response({"detail": "Комментариев нет."}, status=404)
         serializer = CommentSerializer(comments, many=True)
@@ -129,8 +129,8 @@ class CommentView(generics.ListAPIView):
         """
         comment = request.data.get('comment')
         comment["article_id"] = article_id
-        if len(Comment.objects.filter(article_id=comment["article_id"])) == 0:
-            return Response({"unsuccessful": "Wrong data."}, status=400)
+        if len(Article.objects.filter(id=comment["article_id"])) == 0:
+            return Response({"detail": "Неверные данные."}, status=400)
 
         serializer = CommentSerializer(data=comment)
         if serializer.is_valid(raise_exception=True):
