@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from article.models import Article
+from article.models import Article, Comment
 
 
 class ArticleSerializer(serializers.Serializer):
@@ -21,3 +21,14 @@ class ArticleSerializer(serializers.Serializer):
         instance.author_id = validated_data.get('author_id', instance.author_id)
         instance.save()
         return instance
+
+
+class CommentSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    content = serializers.CharField()
+    author_id = serializers.IntegerField()
+    article_id = serializers.IntegerField()
+    created_at = serializers.DateTimeField(read_only=True)
+
+    def create(self, validated_data):
+        return Comment.objects.create(**validated_data)

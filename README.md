@@ -67,8 +67,17 @@ ___
 `Authorization : Token <str:token>`
 ___
 ### Articles
-`GET /api/articles?limit=<int:limit>&offset=<int:offset>&sort=<str:sort>&author_id=<int:author_id>` - возвращает список всех статей.
+`GET /api/articles?limit=<int:limit>&offset=<int:offset>&sort=<str:sort>&author_id=<int:author_id>&in_title=<str:in_title>&in_description=<str:in_description>&in_text=<str:in_text>` - возвращает список всех статей.
 Все параметры передаваемые в url необязательны.
+
+* При задании `in_title` находит статьи содержащие переданное значение в заголовке.
+
+* При задании `in_description` находит статьи содержащие переданное значение в заголовке и описании.
+
+* При задании `in_text` находит статьи содержащие переданное значение в заголовке, описании и тексте.
+
+При этом, при задании нескольких параметров будет применён поиск по тому параметру, который стоит выше в списке.
+
 
 Возвращает:
 ```
@@ -79,11 +88,20 @@ HTTP 200 OK
             "id": integet
             "title": string(120),
             "description": text,
-            "body": text
-            "author_id": integer
+            "body": text,
+            "author_id": integer,
+            "created_at": datetime,
+            "updated_at": datetime
         }
         ...
     ]
+}
+```
+
+```
+HTTP 404 Not Found
+{
+    "detail": "Страница не найдена."
 }
 ```
 ___
@@ -98,8 +116,10 @@ HTTP 200 OK
             "id": integet
             "title": string(120),
             "description": text,
-            "body": text
-            "author_id": integer
+            "body": text,
+            "author_id": integer,
+            "created_at": datetime,
+            "updated_at": datetime
         }
     ]
 }
@@ -173,3 +193,59 @@ HTTP 404 Not Found
 }
 ```
 ____
+
+## Comment
+
+`Get /api/comments/<int:article_id>` - возвращает список комментариев к статье с id: `<int:article_id>`.
+
+Возвращает:
+
+```
+HTTP 200 OK
+{
+    "comments": [
+        {
+            "id": integer,
+            "content": text,
+            "author_id": integer,
+            "article_id": integer,
+            "created_at": datetime
+        },
+        ...
+    ]
+}
+```
+
+```
+HTTP 404 Not Found
+{
+    "detail": "Комментариев нет."
+}
+```
+___
+
+`POST /api/comments/<int:article_id>` - создаёт комментарий к статье с id: `<int:article_id>`.
+```
+{
+    "comment": {
+        "content": text,
+        "author_id": integer
+    }
+}
+```
+
+Возвращает:
+
+```
+HTTP 200 OK
+{
+    "success": "Comment for article <int:article_id> created successfully"
+}
+```
+
+```
+HTTP 400 Bad Request
+{
+    "unsuccessful": "Wrong data."
+}
+```
