@@ -8,11 +8,12 @@ from rest_framework import permissions, generics
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.db.models import Q
+from rest_framework.authtoken.models import Token
 
 
 
 class ArticleView(generics.ListAPIView):
-    DEBUG = True
+    DEBUG = False
     permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, pk=None):
@@ -81,6 +82,10 @@ class ArticleView(generics.ListAPIView):
         """
         saved_article = get_object_or_404(Article.objects.all(), pk=pk)
         data = request.data.get('article')
+        if request.user.id != data["author_id"]:
+            return Response({
+                "detail": "Нет прав на редактирование."
+            }, status=403)
         serializer = ArticleSerializer(instance=saved_article, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             article_saved = serializer.save()
@@ -98,6 +103,10 @@ class ArticleView(generics.ListAPIView):
         }, status=204)
         """
         article = get_object_or_404(Article.objects.all(), pk=pk)
+        if request.user.id != article.author_id:
+            return Response({
+                "detail": "Нет прав на удаление."
+            }, status=403)
         article.delete()
         return Response({
             "message": "Article with id `{}` has been deleted.".format(pk)
@@ -123,9 +132,9 @@ class CommentView(generics.ListAPIView):
 
     def post(self, request, article_id):
         """
-        Возвращает список комментариев к статье.
+        Создаёт комментарий.
         :param request:
-        :return: Response({"articles": serializer.data})
+        :return: Response({"success": "Comment for article {} created successfully".format(comment_saved.article_id)})
         """
         comment = request.data.get('comment')
         comment["article_id"] = article_id
