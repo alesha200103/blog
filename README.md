@@ -171,6 +171,12 @@ HTTP 200 OK
 }
 ```
 ```
+HTTP 403 Forbidden
+{
+    "detail": "Нет прав на редактирование."
+}
+```
+```
 HTTP 404 Not Found
 {
     "detail": "Страница не найдена."
@@ -184,6 +190,12 @@ ___
 HTTP 204 No Content
 {
     "message": "Article with id `2` has been deleted."
+}
+```
+```
+HTTP 403 Forbidden
+{
+    "detail": "Нет прав на удаление."
 }
 ```
 ```
