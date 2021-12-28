@@ -52,7 +52,7 @@ class ArticleView(generics.ListAPIView):
                                            Q(description__icontains=in_text))
 
             if len(articles) == 0:
-                return Response({"detail": "Страница не найдена."}, status=404)
+                return Response(status=204)
 
             serializer = ArticleSerializer(articles, many=True)
             response_data = serializer.data

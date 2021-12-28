@@ -108,10 +108,7 @@ HTTP 200 OK
 ```
 
 ```
-HTTP 404 Not Found
-{
-    "detail": "Страница не найдена."
-}
+HTTP 204 No Content
 ```
 ___
 `GET /api/articles/<int:article_id>` - возвращает статью.
