@@ -94,6 +94,7 @@ HTTP 200 OK
             "title": string(120),
             "description": text,
             "body": text,
+            "category": string(11),
             "author_id": integer,
             "created_at": datetime,
             "updated_at": datetime,
@@ -125,6 +126,7 @@ HTTP 200 OK
             "title": string(120),
             "description": text,
             "body": text,
+            "category": string(11),
             "author_id": integer,
             "created_at": datetime,
             "updated_at": datetime,
@@ -149,10 +151,25 @@ ___
         "title": string(120),
         "description": text,
         "body": text,
+        "category": string(11),
         "author_id": integer
     }
 }
 ```
+
+`category` может принимать следующие значения:
+
+* cinema
+* travelling
+* science
+* technology
+* style
+* celebrities
+* culture
+* sport
+* finance
+* politics
+
 Возвращает:
 ```
 HTTP 200 OK
@@ -168,6 +185,7 @@ ___
         "title": string(120),
         "description": text,
         "body": text,
+        "category": string(11),
         "author_id": integer
     }
 }
