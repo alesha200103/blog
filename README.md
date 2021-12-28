@@ -1,6 +1,11 @@
 # Blog
 ## Локальный запуск сервера
-`python manage.py runserver`
+```
+python manage.py makemigrations
+python manage.py makemigrations article
+python manage.py migrate
+python manage.py runserver
+```
 ____
 ## API
 ### Регистрация и авторизация

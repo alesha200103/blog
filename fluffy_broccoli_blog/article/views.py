@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
 
-
 class ArticleView(generics.ListAPIView):
     DEBUG = True
     permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
