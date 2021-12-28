@@ -290,3 +290,29 @@ HTTP 400 Bad Request
     "detail": "Неверные данные."
 }
 ```
+___
+## Likes
+
+`GET /api/like/<int:article_id>` - проверяет, поставил ли текущий пользователь лайк.
+
+Возвращает:
+
+```
+HTTP 200 OK
+{
+    "is_liked": bool
+}
+```
+___
+
+`PUT /api/like/<int:article_id>` - ставит/убирает лайк статьи с id `article_id`.
+
+Возвращает:
+
+```
+HTTP 200 OK
+{
+    "likes_count": integer
+}
+```
+___

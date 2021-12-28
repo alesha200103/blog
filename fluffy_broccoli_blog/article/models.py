@@ -34,5 +34,5 @@ class Comment(models.Model):
 
 
 class Likes(models.Model):
-    article = models.ForeignKey("Article", related_name='likes', on_delete=models.CASCADE, unique=True)
+    article = models.OneToOneField("Article", related_name='likes', on_delete=models.CASCADE)
     users_id = models.TextField(default="")

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from article.models import Article, Comment
-from article.serializers import ArticleSerializer, CommentSerializer
+from article.models import Article, Comment, Likes
+from article.serializers import ArticleSerializer, CommentSerializer, LikeSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions, generics
 from django.http import HttpResponseRedirect
@@ -130,17 +130,53 @@ class ArticleView(generics.ListAPIView):
 
 
 class LikesView(generics.ListAPIView):
-    DEBUG = True
-    permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
+    DEBUG = False
+    permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticated]
 
     def put(self, request, article_id):
         """
         Добавляет/убирает лайк.
         :param request:
         :param article_id:
-        :return:
+        :return: Response({"likes_count": article.likes_count}, status=200)
         """
-        pass
+        user = request.user.id
+        article = get_object_or_404(Article.objects.all(), id=article_id)
+        likes = Likes.objects.filter(article=article.id).first()
+        if likes is None:
+            like_serializer = LikeSerializer(data={
+                "article_id": article.id,
+                "users_id": f"{user}"
+            })
+            if like_serializer.is_valid(raise_exception=True):
+                like_serializer.save()
+        else:
+            if str(" " + likes.users_id + " ").find(" " + str(user) + " ") == -1:
+                likes.users_id = (likes.users_id + f" {user}").strip()
+                likes.save(update_fields=["users_id"])
+                like_serializer = LikeSerializer(likes)
+            else:
+                likes.users_id = str(" " + likes.users_id + " ").replace(" " + str(user) + " ", " ").strip()
+                likes.save(update_fields=["users_id"])
+                like_serializer = LikeSerializer(likes)
+
+        article.likes_count = len(like_serializer.data['users_id'].split())
+        article.save(update_fields=["likes_count"])
+        return Response({"likes_count": article.likes_count}, status=200)
+
+    def get(self, request, article_id):
+        """
+        Проверяет поставил ли текущий пользователь лайк.
+        :param request:
+        :param article_id:
+        :return: Response({"likes_count": article.likes_count}, status=200)
+        """
+        article = get_object_or_404(Article.objects.all(), id=article_id)
+        likes = Likes.objects.filter(article=article.id).first()
+        if (" " + likes.users_id + " ").find(" " + str(request.user.id) + " ") !=-1:
+            return Response({"is_liked": True}, status=200)
+        else:
+            return Response({"is_liked": False}, status=200)
 
 
 class CommentView(generics.ListAPIView):
