@@ -139,7 +139,7 @@ class CommentView(generics.ListAPIView):
         """
         comments = Comment.objects.filter(article=article_id).order_by("-created_at")
         if len(comments) == 0:
-            return Response({"detail": "Комментариев нет."}, status=404)
+            return Response({"detail": "Комментариев нет."}, status=204)
         serializer = CommentSerializer(comments, many=True)
         return Response({"comments": serializer.data})
 
