@@ -8,12 +8,13 @@ from rest_framework import permissions, generics
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.db.models import Q
+from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
 
 
 class ArticleView(generics.ListAPIView):
-    DEBUG = False
+    DEBUG = True
     permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, pk=None):
@@ -52,12 +53,25 @@ class ArticleView(generics.ListAPIView):
                 return Response({"detail": "Страница не найдена."}, status=404)
 
             serializer = ArticleSerializer(articles, many=True)
-            return Response({"articles": serializer.data})
+            response_data = serializer.data
+            articles_lst = []
+            for i in response_data:
+                user = User.objects.get(id=i["author_id"])
+                comments = Comment.objects.filter(article=i["id"])
+                i["author_name"] = user.username
+                i["comments_count"] = len(comments)
+                articles_lst.append(i)
+            return Response({"articles": articles_lst})
 
         else:
             article = get_object_or_404(Article.objects.all(), pk=pk)
             serializer = ArticleSerializer(article)
-            return Response({"articles": serializer.data})
+            response_data = serializer.data
+            comments = Comment.objects.filter(article=response_data["id"])
+            user = User.objects.get(id=response_data["author_id"])
+            response_data["author_name"] = user.username
+            response_data["comments_count"] = len(comments)
+            return Response({"articles": response_data})
 
     def post(self, request):
         """

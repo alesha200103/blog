@@ -119,7 +119,10 @@ HTTP 200 OK
             "body": text,
             "author_id": integer,
             "created_at": datetime,
-            "updated_at": datetime
+            "updated_at": datetime,
+            "author_name": string(150),
+            "likes_count": integer,
+            "comments_count": integer
         }
     ]
 }

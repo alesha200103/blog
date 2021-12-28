@@ -10,6 +10,7 @@ class ArticleSerializer(serializers.Serializer):
     author_id = serializers.IntegerField()
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
+    likes_count = serializers.IntegerField(default=0)
 
     def create(self, validated_data):
         return Article.objects.create(**validated_data)
@@ -19,6 +20,7 @@ class ArticleSerializer(serializers.Serializer):
         instance.description = validated_data.get('description', instance.description)
         instance.body = validated_data.get('body', instance.body)
         instance.author_id = validated_data.get('author_id', instance.author_id)
+        instance.likes_count = validated_data.get('likes_count', instance.likes_count)
         instance.save()
         return instance
 
