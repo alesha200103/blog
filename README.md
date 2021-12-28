@@ -250,7 +250,8 @@ HTTP 200 OK
             "content": text,
             "author_id": integer,
             "article_id": integer,
-            "created_at": datetime
+            "created_at": datetime,
+            "author_name": string(150)
         },
         ...
     ]
@@ -280,7 +281,14 @@ ___
 ```
 HTTP 200 OK
 {
-    "success": "Comment for article <int:article_id> created successfully"
+    "comment": {
+        "id": integer,
+        "content": text,
+        "author_id": integer,
+        "article_id": integer,
+        "created_at": DateTime,
+        "author_name": string(150)
+    }
 }
 ```
 

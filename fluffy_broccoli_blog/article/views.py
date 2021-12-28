@@ -194,14 +194,19 @@ class CommentView(generics.ListAPIView):
         if len(comments) == 0:
             return Response({"detail": "Комментариев нет."}, status=204)
         serializer = CommentSerializer(comments, many=True)
-        return Response({"comments": serializer.data})
+        comments_lst = []
+        for i in serializer.data:
+            user = User.objects.get(id=i["author_id"])
+            i["author_name"] = user.username
+            comments_lst.append(i)
+        return Response({"comments": comments_lst})
 
     def post(self, request, article_id):
         """
         Создаёт комментарий.
         :param request:
         :param article_id:
-        :return: Response({"success": "Comment for article {} created successfully".format(comment_saved.article_id)})
+        :return: Response({"comment": comment_saved.data})
         """
         comment = request.data.get('comment')
         comment["article_id"] = article_id
@@ -210,7 +215,11 @@ class CommentView(generics.ListAPIView):
 
         serializer = CommentSerializer(data=comment)
         if serializer.is_valid(raise_exception=True):
-            comment_saved = serializer.save()
+            serializer.save()
         else:
             return Response({"detail": "Неверные данные."})
-        return Response({"success": "Comment for article {} created successfully".format(comment_saved.article_id)})
+
+        user = User.objects.get(id=serializer.data["author_id"])
+        response_data = serializer.data
+        response_data["author_name"] = user.username
+        return Response({"comment": response_data})
