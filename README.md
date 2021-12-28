@@ -72,7 +72,7 @@ ___
 `Authorization : Token <str:token>`
 ___
 ### Articles
-`GET /api/articles?limit=<int:limit>&offset=<int:offset>&sort=<str:sort>&author_id=<int:author_id>&in_title=<str:in_title>&in_description=<str:in_description>&in_text=<str:in_text>` - возвращает список всех статей.
+`GET /api/articles?limit=<int:limit>&offset=<int:offset>&sort=<str:sort>&author_id=<int:author_id>&category=<str:category>&in_title=<str:in_title>&in_description=<str:in_description>&in_text=<str:in_text>` - возвращает список всех статей.
 Все параметры передаваемые в url необязательны.
 
 * При задании `in_title` находит статьи содержащие переданное значение в заголовке.

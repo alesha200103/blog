@@ -28,11 +28,14 @@ class ArticleView(generics.ListAPIView):
             offset = int(request.GET.get("offset", 0))
             sort = request.GET.get("sort", "asc")
             author_id = int(request.GET.get("author_id", 0))
+            category = request.GET.get("category", None)
             in_title = request.GET.get("in_title", None)
             in_description = request.GET.get("in_description", None)
             in_text = request.GET.get("in_text", None)
 
             articles = Article.objects.order_by("created_at" if sort == "asc" else "-created_at")
+            if category is not None:
+                articles = articles.filter(category=category)
             if author_id != 0:
                 articles = articles.filter(author=author_id)
             if limit != 0:
@@ -126,6 +129,20 @@ class ArticleView(generics.ListAPIView):
         }, status=204)
 
 
+class LikesView(generics.ListAPIView):
+    DEBUG = True
+    permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
+
+    def put(self, request, article_id):
+        """
+        Добавляет/убирает лайк.
+        :param request:
+        :param article_id:
+        :return:
+        """
+        pass
+
+
 class CommentView(generics.ListAPIView):
 
     DEBUG = True
@@ -147,6 +164,7 @@ class CommentView(generics.ListAPIView):
         """
         Создаёт комментарий.
         :param request:
+        :param article_id:
         :return: Response({"success": "Comment for article {} created successfully".format(comment_saved.article_id)})
         """
         comment = request.data.get('comment')

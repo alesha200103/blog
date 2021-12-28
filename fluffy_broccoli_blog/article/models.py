@@ -31,3 +31,8 @@ class Comment(models.Model):
     article = models.ForeignKey("Article", related_name='comments', on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Likes(models.Model):
+    article = models.ForeignKey("Article", related_name='likes', on_delete=models.CASCADE, unique=True)
+    users_id = models.TextField(default="")
