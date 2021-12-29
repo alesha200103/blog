@@ -38,8 +38,6 @@ class ArticleView(generics.ListAPIView):
                 articles = articles.filter(category=category)
             if author_id != 0:
                 articles = articles.filter(author=author_id)
-            if limit != 0:
-                articles = articles[offset:offset+limit]
 
             if in_title is not None:
                 articles = articles.filter(title__icontains=in_title)
@@ -50,6 +48,9 @@ class ArticleView(generics.ListAPIView):
                 articles = articles.filter(Q(body__icontains=in_text) |
                                            Q(title__icontains=in_text) |
                                            Q(description__icontains=in_text))
+
+            if limit != 0:
+                articles = articles[offset:offset+limit]
 
             if len(articles) == 0:
                 return Response(status=204)
