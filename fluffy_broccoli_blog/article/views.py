@@ -13,7 +13,7 @@ from rest_framework.authtoken.models import Token
 
 
 class ArticleView(generics.ListAPIView):
-    DEBUG = True
+    DEBUG = False
     permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, pk=None):
@@ -181,7 +181,7 @@ class LikesView(generics.ListAPIView):
 
 class CommentView(generics.ListAPIView):
 
-    DEBUG = True
+    DEBUG = False
     permission_classes = [permissions.AllowAny if DEBUG else permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, article_id):
