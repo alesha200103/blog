@@ -174,7 +174,7 @@ class LikesView(generics.ListAPIView):
         """
         article = get_object_or_404(Article.objects.all(), id=article_id)
         likes = Likes.objects.filter(article=article.id).first()
-        if (" " + likes.users_id + " ").find(" " + str(request.user.id) + " ") !=-1:
+        if likes is not None and (" " + likes.users_id + " ").find(" " + str(request.user.id) + " ") !=-1:
             return Response({"is_liked": True}, status=200)
         else:
             return Response({"is_liked": False}, status=200)
